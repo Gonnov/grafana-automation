@@ -1,8 +1,15 @@
-127.0.1.1
 
+127.0.1.1
 
 [grafana_ubuntu_alloy]
 127.0.1.1
 
-
+[grafana_ubuntu_alloy:vars]
+arch=amd64
+gcloud_hosted_metrics_url=https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
+gcloud_hosted_metrics_id=1786413
+gcloud_scrape_interval=60s
+gcloud_hosted_logs_url=https://logs-prod-012.grafana.net/loki/api/v1/push
+gcloud_hosted_logs_id=992493
+install_script_url=https://storage.googleapis.com/cloud-onboarding/alloy/scripts/install-linux.sh
 

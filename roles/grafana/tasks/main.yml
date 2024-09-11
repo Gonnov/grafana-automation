@@ -2,16 +2,16 @@
 # tasks file for roles/grafana
 
 
-  tasks:
-    - name: Installer Grafana Alloy
-    - shell: |
-      ARCH={{ arch }} \
-      GCLOUD_HOSTED_METRICS_URL={{ gcloud_hosted_metrics_url }} \
-      GCLOUD_HOSTED_METRICS_ID={{ gcloud_hosted_metrics_id }} \
-      GCLOUD_SCRAPE_INTERVAL={{ gcloud_scrape_interval }} \
-      GCLOUD_HOSTED_LOGS_URL={{ gcloud_hosted_logs_url }} \
-      GCLOUD_HOSTED_LOGS_ID={{ gcloud_hosted_logs_id }} \
-      GCLOUD_RW_API_KEY={{ gcloud_rw_api_key }} \
+tasks:
+  - name: Run installation script
+    shell: |
+      ARCH="{{ arch }}" \
+      GCLOUD_HOSTED_METRICS_URL="{{ gcloud_hosted_metrics_url }}" \
+      GCLOUD_HOSTED_METRICS_ID="{{ gcloud_hosted_metrics_id }}" \
+      GCLOUD_SCRAPE_INTERVAL="{{ gcloud_scrape_interval }}" \
+      GCLOUD_HOSTED_LOGS_URL="{{ gcloud_hosted_logs_url }}" \
+      GCLOUD_HOSTED_LOGS_ID="{{ gcloud_hosted_logs_id }}" \
+      GCLOUD_RW_API_KEY="{{ gcloud_rw_api_key }}" \
       /bin/sh -c "$(curl -fsSL {{ install_script_url }})"
     args:
       executable: /bin/bash
