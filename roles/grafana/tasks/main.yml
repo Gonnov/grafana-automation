@@ -1,31 +1,49 @@
 ---
 # tasks file for roles/grafana
 
+- name: Install Alloy
+  ansible.builtin.include_role:
+    name: grafana.grafana.alloy
+  vars:
+    config: |
+      prometheus.scrape "default" {
+        targets = [{"__address__" = "localhost:12345"}]
+        forward_to = [prometheus.remote_write.prom.receiver]
+      }
+      prometheus.remote_write "prom" {
+        endpoint {
+            url = "https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push"
+        }
+      }
 
-tasks:
-  - name: Run installation script
-    shell: |
-      ARCH="{{ arch }}" \
-      GCLOUD_HOSTED_METRICS_URL="{{ gcloud_hosted_metrics_url }}" \
-      GCLOUD_HOSTED_METRICS_ID="{{ gcloud_hosted_metrics_id }}" \
-      GCLOUD_SCRAPE_INTERVAL="{{ gcloud_scrape_interval }}" \
-      GCLOUD_HOSTED_LOGS_URL="{{ gcloud_hosted_logs_url }}" \
-      GCLOUD_HOSTED_LOGS_ID="{{ gcloud_hosted_logs_id }}" \
-      GCLOUD_RW_API_KEY="{{ gcloud_rw_api_key }}" \
-      /bin/sh -c "$(curl -fsSL {{ install_script_url }})"
-    args:
-      executable: /bin/bash
+- name: Copy alloy config file to remote machine
+  ansible.builtin.copy:
+    src: config.alloy  # Local machine path
+    dest: /etc/alloy/config.alloy
 
-  - name: Append Grafana Config
-    template:
-      src: grafana.ini.j2
-      dest: /etc/alloy/grafana.ini
-    notify:
-      - restart grafana
+- name: Restart Alloy service
+  ansible.builtin.systemd:
+    name: alloy.service  # The name of your service
+    state: restarted     # Restart the service
+    enabled: yes         # Ensure the service is enabled at boot (optional)
+  become: yes            # Run the command with sudo (privileged)
 
-  - name: Restart Alloy service
-    tasks:
-      - name: Restart alloy.service using systemd
-        ansible.builtin.systemd:
-          name: alloy.service
-          state: restarted
+
+- name: Create Grafana Cloud stack
+  connection: local
+  hosts: localhost
+
+vars:
+  stack_name: 'ubuntu_server'
+  org_slug: 'florian2ee4-slug'
+  org_name: 'florian2ee4'
+  stack_slug: 'ubuntu-server-slug'
+  name: 'Ubuntu Server Monitoring Dashboard'
+  
+    - name: Create a Grafana Cloud stack
+      grafana.grafana.cloud_stack:
+        name: '{{ stack_name }}'
+        stack_slug: '{{ stack_name }}'
+        cloud_api_key: '{{ grafana_cloud_api_key }}'
+        org_slug: '{{ org_name }}'
+        state: present

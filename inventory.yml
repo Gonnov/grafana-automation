@@ -1,6 +1,0 @@
-all:
-  hosts:
-    remote_server:
-      ansible_host: 192.168.64.4
-      ansible_user: root
-      ansible_ssh_pass: 12345678

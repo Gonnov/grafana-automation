@@ -6,8 +6,9 @@
 #   roles:
 #     - { role: rippled, tags: ['install, uninstall'] }
 - name: Grafana playbook
-  hosts: all
-  become: true
+  hosts: grafana_ubuntu_alloy
+  vars_files:
+    - variables/grafana/variables.yml
   roles:
-    - { role: grafana, tags: ['install'] }
+    - { role: grafana }
   
