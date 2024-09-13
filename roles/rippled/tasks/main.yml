@@ -87,23 +87,23 @@
     enabled: yes
 
 - name: Allow port 51235 for P2P communication (Ripple protocol)
-    ufw:
-      rule: allow
-      port: 51235
-      proto: tcp
+  ufw:
+    rule: allow
+    port: 51235
+    proto: tcp
 
-  - name: Allow port 5005 for RPC (JSON-RPC/WebSocket)
-    ufw:
-      rule: allow
-      port: 5005
-      proto: tcp
+- name: Allow port 5005 for RPC (JSON-RPC/WebSocket)
+  ufw:
+    rule: allow
+    port: 5005
+    proto: tcp
 
-  - name: (Optional) Allow HTTPS port 443 for secure connections
-    ufw:
-      rule: allow
-      port: 443
-      proto: tcp
+- name: (Optional) Allow HTTPS port 443 for secure connections
+  ufw:
+    rule: allow
+    port: 443
+    proto: tcp
 
-  - name: Ensure UFW is reloaded to apply changes
-    ufw:
-      state: reloaded
+- name: Ensure UFW is reloaded to apply changes
+  ufw:
+    state: reloaded
