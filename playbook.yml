@@ -1,7 +1,6 @@
 ---
-
 - name: Grafana playbook
-  hosts: grafana_ubuntu_alloy
+  hosts: grafana-deploy
   vars_files:
     - variables/grafana/variables.yml
   roles:
