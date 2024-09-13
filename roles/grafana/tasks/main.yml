@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/grafana
 
-- name: Install Alloy with automatic answer
+- name: Install Alloy
   ansible.builtin.shell: |
     export DEBIAN_FRONTEND=noninteractive
     ARCH="amd64" \

@@ -1,10 +1,5 @@
 ---
 
-# - name: Rippled playbook
-#   hosts: all
-#   become: true
-#   roles:
-#     - { role: rippled, tags: ['install, uninstall'] }
 - name: Grafana playbook
   hosts: grafana_ubuntu_alloy
   vars_files:
