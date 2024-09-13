@@ -14,19 +14,17 @@
     /bin/sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/alloy/scripts/install-linux.sh)"
   become: yes
 
-- name: Copy alloy config file to remote machine
-  ansible.builtin.copy:
-    src: config.alloy
-    dest: /etc/alloy/temp_config.alloy
-
-- name: Append the 2 files together
-  ansible.builtin.shell: 
-    cmd: "cat /etc/alloy/temp_config.alloy >> /etc/alloy/config.alloy"
+- name: Append content of config.alloy to /etc/alloy/config.alloy
+  ansible.builtin.blockinfile:
+    path: /etc/alloy/config.alloy
+    block: "{{ lookup('file', 'files/config.alloy') }}"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
   become: yes
 
 - name: Restart Alloy service
-  ansible.builtin.systemd:
-    name: alloy.service
+  systemd:
+    name: alloy
     state: restarted
     enabled: yes
-  become: yes           
+  when: ansible_facts['os_family'] == 'Debian'
+  become: yes
