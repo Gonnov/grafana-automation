@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/grafana
+# tasks file for roles/alloy
 
 - name: Install Alloy
   ansible.builtin.shell: |

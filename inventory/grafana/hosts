@@ -1,7 +1,0 @@
-[grafana-deploy]
-51.159.97.114 ansible_ssh_private_key_file=~/.ssh/ansible
-
-[grafana-deploy:vars]
-ansible_user=ansible
-ansible_become=yes
-ansible_become_method=sudo
