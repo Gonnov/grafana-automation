@@ -2,7 +2,9 @@
 - name: Grafana playbook
   hosts: grafana-deploy
   vars_files:
+    - variables/variables.yml
     - variables/grafana/variables.yml
+    - variables/rippled/variables.yml
   roles:
-    - { role: grafana }
-  
+    # - { role: grafana }
+    - { role: rippled }
