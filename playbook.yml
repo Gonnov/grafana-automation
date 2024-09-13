@@ -1,10 +1,10 @@
 ---
-- name: Grafana playbook
-  hosts: grafana-deploy
+- name: Intern playbook
+  hosts: alloy-deploy rippled-deploy
   vars_files:
     - variables/variables.yml
-    - variables/grafana/variables.yml
+    - variables/alloy/variables.yml
     - variables/rippled/variables.yml
   roles:
-    # - { role: grafana }
+    - { role: alloy }
     - { role: rippled }
