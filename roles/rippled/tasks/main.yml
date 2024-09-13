@@ -1,0 +1,86 @@
+---
+# tasks file for roles/rippled
+
+# Installation
+- name: Install required utilities
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - wget
+      - gnupg
+    state: present
+    update_cache: true
+  become: true
+
+- name: Ensure the directory keyrings exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download the ripple GPG key
+  get_url:
+    url: https://repos.ripple.com/repos/api/gpg/key/public
+    dest: /tmp/ripple_public_key.gpg
+    mode: '0644'
+
+- name: Convert the GPG key to the format required by APT
+  command: >
+    gpg --dearmor -o /etc/apt/keyrings/ripple.gpg /tmp/ripple_public_key.gpg
+  args:
+    creates: /etc/apt/keyrings/ripple.gpg
+
+- name: Remove the temporary GPG key file
+  file:
+    path: /tmp/ripple_public_key.gpg
+    state: absent
+
+- name: Get OS release name
+  ansible.builtin.shell: lsb_release -cs | tail -n1
+  register: os_release
+  changed_when: false
+
+- name: Add ripple repository
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/ripple.gpg] https://repos.ripple.com/repos/rippled-deb {{ os_release.stdout | trim }} stable"
+    state: present
+    filename: ripple
+  become: true
+
+- name: Install rippled
+  apt:
+    name: rippled
+    state: present
+    update_cache: true
+  become: true
+
+- name: Configure rippled - Copy custom rippled.cfg
+  copy:
+    src: files/rippled.cfg
+    dest: /etc/opt/ripple/rippled.cfg
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Copy validators.txt
+  copy:
+    src: files/validators.txt
+    dest: /etc/opt/ripple/validators.txt
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Restart rippled to apply the new configuration
+  service:
+    name: rippled
+    state: restarted
+    enabled: yes
+
+- name: Ensure rippled is started
+  service:
+    name: rippled
+    state: started
+    enabled: yes
