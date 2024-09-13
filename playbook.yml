@@ -1,0 +1,8 @@
+---
+- name: Alloy playbook
+  hosts: alloy-deploy
+  vars_files:
+    - variables/alloy/variables.yml
+  roles:
+    - { role: grafana }
+  

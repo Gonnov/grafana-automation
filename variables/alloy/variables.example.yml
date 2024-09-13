@@ -1,0 +1,4 @@
+ansible_become_password: ""
+grafana_metrics_id: ""
+grafana_logs_id: ""
+grafana_cloud_api_key: ""
